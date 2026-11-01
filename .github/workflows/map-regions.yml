@@ -35,7 +35,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           BUILD=$(node -p "require('./build/map-regions/regions.json').build")
-          gh release create "osm-$BUILD" build/map-regions/* \
-            --title "OpenStreetMap regions, Protomaps build $BUILD" \
-            --notes "Map data © OpenStreetMap contributors, under the Open Database Licence 1.0 (https://www.openstreetmap.org/copyright). Maps cut from the Protomaps daily build $BUILD at zoom 15; routing tiles built with Valhalla from the Geofabrik extract." \
-            --latest
+          NOTES="Map data © OpenStreetMap contributors, under the Open Database Licence 1.0 (https://www.openstreetmap.org/copyright). Maps cut from the Protomaps daily build $BUILD at zoom 15; routing tiles built with Valhalla from the Geofabrik extract."
+          # A run on the same Protomaps build replaces that release's files rather than failing on its tag.
+          if gh release view "osm-$BUILD" > /dev/null 2>&1; then
+            gh release upload "osm-$BUILD" build/map-regions/* --clobber
+            gh release edit "osm-$BUILD" --notes "$NOTES" --latest
+          else
+            gh release create "osm-$BUILD" build/map-regions/* \
+              --title "OpenStreetMap regions, Protomaps build $BUILD" \
+              --notes "$NOTES" \
+              --latest
+          fi
