@@ -16,6 +16,16 @@ node scripts/build-map-regions.mjs --out build/map-regions
 
 `--only nt,tas` cuts some states; `--build YYYYMMDD` picks a Protomaps build.
 
+## Routing tiles
+
+Each region also has `<id>.routing.tar.gz`: the [Valhalla](https://github.com/valhalla/valhalla) road graph tiles whose box meets the region's, listed under the region's `routing` in `regions.json`. The app unpacks them into one folder and routes trips on the phone with no signal. `scripts/build-routing-tiles.mjs` builds them in the same workflow, from the [Geofabrik](https://download.geofabrik.de/australia-oceania.html) extract of Australia, with the official Valhalla Docker image.
+
+To build locally (needs Docker and about 8 GB of memory), after the map regions:
+
+```bash
+node scripts/build-routing-tiles.mjs --out build/map-regions
+```
+
 ## Store versions
 
 `app/version.json` holds the latest and minimum app versions on each store. The app reads it to tell travellers a new version is out. Update it when a release reaches the App Store or Google Play.
