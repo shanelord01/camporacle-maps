@@ -1,0 +1,16 @@
+CampOracle maps
+
+Scripts and configuration
+Copyright (c) 2026 Shane Lord. All rights reserved.
+The files in scripts/, app/ and .github/ may not be copied, modified or
+used without written permission. No licence is granted.
+
+Map data
+The offline map files published in this repository's releases contain map
+data © OpenStreetMap contributors, made available under the Open Database
+Licence 1.0: https://opendatacommons.org/licenses/odbl/1-0/
+See https://www.openstreetmap.org/copyright.
+
+Label glyphs
+The Noto Sans glyph files are under the SIL Open Font Licence 1.1:
+https://openfontlicense.org

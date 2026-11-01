@@ -22,4 +22,6 @@ node scripts/build-map-regions.mjs --out build/map-regions
 
 ## Licences
 
-Map data © OpenStreetMap contributors, under the [Open Database Licence 1.0](https://www.openstreetmap.org/copyright). Noto Sans glyphs under the SIL Open Font Licence 1.1.
+See LICENSE. In short:
+
+Map data © OpenStreetMap contributors, under the [Open Database Licence 1.0](https://www.openstreetmap.org/copyright). Noto Sans glyphs under the SIL Open Font Licence 1.1. The scripts and configuration are © Shane Lord, all rights reserved.
