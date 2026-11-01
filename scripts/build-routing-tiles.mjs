@@ -11,7 +11,7 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 
 const VALHALLA = 'ghcr.io/valhalla/valhalla:latest';
 const EXTRACT = 'https://download.geofabrik.de/australia-oceania/australia-latest.osm.pbf';
@@ -24,8 +24,9 @@ function arg(name) {
 }
 
 const root = join(import.meta.dirname, '..');
-const outDir = arg('out') ?? join(root, 'build', 'map-regions');
-const work = arg('work') ?? join(root, 'build', 'valhalla');
+// Absolute, because Docker reads a relative -v source as a volume name.
+const outDir = resolve(arg('out') ?? join(root, 'build', 'map-regions'));
+const work = resolve(arg('work') ?? join(root, 'build', 'valhalla'));
 const only = arg('only')?.split(',');
 const regions = JSON.parse(readFileSync(join(root, 'scripts', 'data', 'map-regions.json'), 'utf8')).filter((r) => !only || only.includes(r.id));
 
