@@ -1,0 +1,9 @@
+[
+  { "id": "nsw", "name": "New South Wales and the ACT", "bbox": [140.9, -37.6, 153.7, -28.1] },
+  { "id": "vic", "name": "Victoria", "bbox": [140.9, -39.2, 150.0, -33.9] },
+  { "id": "qld", "name": "Queensland", "bbox": [137.9, -29.2, 153.6, -9.9] },
+  { "id": "sa", "name": "South Australia", "bbox": [129.0, -38.1, 141.0, -26.0] },
+  { "id": "wa", "name": "Western Australia", "bbox": [112.9, -35.2, 129.0, -13.6] },
+  { "id": "nt", "name": "Northern Territory", "bbox": [129.0, -26.0, 138.0, -10.9] },
+  { "id": "tas", "name": "Tasmania", "bbox": [143.8, -43.7, 148.5, -39.5] }
+]

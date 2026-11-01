@@ -1,0 +1,38 @@
+# Cuts CampOracle's offline map regions from the newest Protomaps daily build
+# of OpenStreetMap and publishes them as this repository's latest release,
+# where the app downloads them. Runs on the 2nd of each month, or by hand.
+
+name: Offline map regions
+
+on:
+  schedule:
+    - cron: '0 18 2 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install pmtiles
+        run: |
+          curl -sSL https://github.com/protomaps/go-pmtiles/releases/download/v1.31.2/go-pmtiles_1.31.2_Linux_x86_64.tar.gz | tar -xz -C /usr/local/bin pmtiles
+          pmtiles version
+      - name: Cut the regions
+        run: node scripts/build-map-regions.mjs --out build/map-regions
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BUILD=$(node -p "require('./build/map-regions/regions.json').build")
+          gh release create "osm-$BUILD" build/map-regions/* \
+            --title "OpenStreetMap regions, Protomaps build $BUILD" \
+            --notes "Map data © OpenStreetMap contributors, under the Open Database Licence 1.0 (https://www.openstreetmap.org/copyright). Cut from the Protomaps daily build $BUILD at zoom 15." \
+            --latest
