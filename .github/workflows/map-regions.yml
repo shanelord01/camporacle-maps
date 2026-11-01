@@ -1,5 +1,6 @@
 # Cuts CampOracle's offline map regions from the newest Protomaps daily build
-# of OpenStreetMap and publishes them as this repository's latest release,
+# of OpenStreetMap, builds each region's road routing tiles (Valhalla, from the
+# Geofabrik extract), and publishes them as this repository's latest release,
 # where the app downloads them. Runs on the 2nd of each month, or by hand.
 
 name: Offline map regions
@@ -27,6 +28,8 @@ jobs:
           pmtiles version
       - name: Cut the regions
         run: node scripts/build-map-regions.mjs --out build/map-regions
+      - name: Build the routing tiles
+        run: node scripts/build-routing-tiles.mjs --out build/map-regions --work build/valhalla
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -34,5 +37,5 @@ jobs:
           BUILD=$(node -p "require('./build/map-regions/regions.json').build")
           gh release create "osm-$BUILD" build/map-regions/* \
             --title "OpenStreetMap regions, Protomaps build $BUILD" \
-            --notes "Map data © OpenStreetMap contributors, under the Open Database Licence 1.0 (https://www.openstreetmap.org/copyright). Cut from the Protomaps daily build $BUILD at zoom 15." \
+            --notes "Map data © OpenStreetMap contributors, under the Open Database Licence 1.0 (https://www.openstreetmap.org/copyright). Maps cut from the Protomaps daily build $BUILD at zoom 15; routing tiles built with Valhalla from the Geofabrik extract." \
             --latest
