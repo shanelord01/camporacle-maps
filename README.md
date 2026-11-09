@@ -26,6 +26,19 @@ To build locally (needs Docker and about 8 GB of memory), after the map regions:
 node scripts/build-routing-tiles.mjs --out build/map-regions
 ```
 
+### Routing tiles for the web planner
+
+The web planner at plan.camporacle.com.au routes in a Valhalla container that starts with no tiles and fetches each tile a route crosses from Cloudflare R2. `scripts/upload-routing-tiles.mjs` uploads the build's loose tiles to the `camporacle-routing-tiles` bucket under `routing/osm-YYYYMMDD/`, copying only tiles that changed, then points `routing/current.json` at that build and deletes builds older than the one before it. The workflow runs it after building the tiles, once these repository secrets are set: `R2_ACCOUNT_ID`, and `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from an R2 API token with Object Read and Write on that bucket only.
+
+To upload by hand (needs `brew install rclone` and the same three values, plus `R2_ROUTING_BUCKET=camporacle-routing-tiles`, in the environment), after building the tiles:
+
+```bash
+node scripts/upload-routing-tiles.mjs --dry-run
+node scripts/upload-routing-tiles.mjs
+```
+
+The Valhalla image is pinned to the same version as the web planner's container. Change the two together.
+
 ## Store versions
 
 `app/version.json` holds the latest and minimum app versions on each store. The app reads it to tell travellers a new version is out. Update it when a release reaches the App Store or Google Play.
