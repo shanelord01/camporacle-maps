@@ -17,6 +17,8 @@ jobs:
   regions:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      HAS_R2: ${{ secrets.R2_ACCESS_KEY_ID != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,6 +32,20 @@ jobs:
         run: node scripts/build-map-regions.mjs --out build/map-regions
       - name: Build the routing tiles
         run: node scripts/build-routing-tiles.mjs --out build/map-regions --work build/valhalla
+      # The web planner's routing container fetches loose tiles from R2 (scripts/upload-routing-tiles.mjs). Skipped
+      # until the bucket's credentials are in the repository's secrets.
+      - name: Upload the routing tiles to R2
+        if: env.HAS_R2 == 'true'
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ROUTING_BUCKET: camporacle-routing-tiles
+        run: |
+          curl -sSfL -o rclone.zip https://github.com/rclone/rclone/releases/download/v1.76.0/rclone-v1.76.0-linux-amd64.zip
+          unzip -q -j rclone.zip 'rclone-v1.76.0-linux-amd64/rclone' -d /usr/local/bin
+          rclone version
+          node scripts/upload-routing-tiles.mjs --tiles build/valhalla/tiles --manifest build/map-regions/regions.json
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
