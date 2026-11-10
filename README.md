@@ -41,7 +41,9 @@ The Valhalla image is pinned to the same version as the web planner's container.
 
 ## Store versions
 
-`app/version.json` holds the latest and minimum app versions on each store. The app reads it to tell travellers a new version is out. Update it when a release reaches the App Store or Google Play.
+`app/version.json` holds the latest and minimum app versions on each store, one entry for iOS and one for Android. The app reads it at launch and at most every six hours to tell travellers a new version is out. Update it when a release is live on the App Store or Google Play, not when it is submitted, or travellers are sent to a store page that still has the old build.
+
+The version stays 1.0.0 between releases, so each value can carry the native build number: `"1.0.0 (45)"` is the iOS build number or Android version code 45. A phone on a lower build sees `latest` as a new version it can install, and is made to update when it is below `minimum`. A value without a build number (`"1.0.0"`) ignores the build. Builds older than 43 also ignore it.
 
 ## Licences
 
