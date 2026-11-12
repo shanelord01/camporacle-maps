@@ -13,9 +13,9 @@ import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
-// Pinned, and the same as the web planner's routing container (camporacle repo, web/routing/Dockerfile), so tiles
-// and engine always match. Move both together.
-const VALHALLA = 'ghcr.io/valhalla/valhalla:3.9.1';
+// Pinned by tag and digest, and the same as the web planner's routing container (camporacle repo,
+// web/routing/Dockerfile), so tiles and engine always match. Move both together.
+const VALHALLA = 'ghcr.io/valhalla/valhalla:3.9.1@sha256:4fd114eb1d26b8fc2f43bcb3df234c1b63a0bf13c277405e5943d5361dc575de';
 const EXTRACT = 'https://download.geofabrik.de/australia-oceania/australia-latest.osm.pbf';
 // Valhalla's tile levels and their sizes in degrees: highways, arterials, local roads.
 const LEVELS = { 0: 4, 1: 1, 2: 0.25 };
