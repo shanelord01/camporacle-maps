@@ -37,7 +37,7 @@ node scripts/upload-routing-tiles.mjs --dry-run
 node scripts/upload-routing-tiles.mjs
 ```
 
-The Valhalla image is pinned to the same version as the web planner's container. Change the two together.
+The Valhalla image is pinned by tag and digest to the same version as the web planner's container. Change the two together.
 
 ## Store versions
 
